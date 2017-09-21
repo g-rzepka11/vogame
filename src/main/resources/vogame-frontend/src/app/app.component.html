@@ -1,0 +1,11 @@
+  <h1>VoGame</h1>
+<br/><br/>
+  <span>Counter: {{counter}} </span>
+<br/><br/>
+  <span>Definition: {{definition}}</span>
+<br/><br/>
+  <span>Word: {{word}}</span>
+<br/><br/>
+  <div>
+    <span>Try:</span> <input type="text" word="inputField" [(ngModel)]="inputField" (keyup.enter)="send()" />
+  </div>
