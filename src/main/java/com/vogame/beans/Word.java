@@ -4,12 +4,12 @@ public class Word {
 
     private String content;
 
-    private String definition;
+    private LongmanResponse definition;
 
     public Word() {
     }
 
-    public Word(String content, String definition) {
+    public Word(String content, LongmanResponse definition) {
         this.content = content;
         this.definition = definition;
     }
@@ -18,11 +18,11 @@ public class Word {
         return content;
     }
 
-    public String getDefinition() {
+    public LongmanResponse getDefinition() {
         return definition;
     }
 
-    public void setDefinition(String definition) {
+    public void setDefinition(LongmanResponse definition) {
         this.definition = definition;
     }
 }

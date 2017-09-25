@@ -1,6 +1,7 @@
 package com.vogame.controllers;
 
 import com.vogame.beans.Counter;
+import com.vogame.beans.LongmanResponse;
 import com.vogame.beans.Word;
 import com.vogame.entities.WordEntity;
 import com.vogame.repositories.WordRepository;
@@ -33,7 +34,7 @@ public class CounterController {
 
     private String hashedWord = "";
 
-    private String definition = "";
+    private LongmanResponse definition;
 
     @Autowired
     private SimpMessagingTemplate template;

@@ -13,7 +13,7 @@ public class GreetingController {
 
     @MessageMapping("/check")
     public void check(CheckWord message) throws Exception {
-        if(counterController.getCurrentWord().equals(message.getWord())) {
+        if(counterController.getCurrentWord().toLowerCase().equals(message.getWord().toLowerCase())) {
             counterController.success();
         }
     }

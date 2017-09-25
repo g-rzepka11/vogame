@@ -1,23 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { StompService } from './stomp.service';
+import { LongmanResponse } from './model/longmanResponse';
 
 @Component({
   moduleId: module.id,
   selector: 'app-root',
   templateUrl: 'app.component.html',
+  styleUrls: ['app.component.css'],
   providers: [StompService]
 })
 export class AppComponent implements OnInit {
   public inputField = '';
   public counter: string;
   public word: string;
-  public definition: string;
+  public definition: LongmanResponse;
 
   constructor(private _stompService: StompService) {
   }
 
   public ngOnInit(): void {
-    this._stompService.connect('ws://localhost:8080/stompTest');
+    this._stompService.connect('ws://localhost:8181/stompTest');
     this._stompService.getObservable().subscribe(payload => {
       this.counter = payload.content;
     });
