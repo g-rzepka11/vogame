@@ -1,14 +1,14 @@
-import { AppPage } from './app.po';
+import { VogameFrontendPage } from './app.po';
 
-describe('vogame-frontend App', () => {
-  let page: AppPage;
+describe('vogame-frontend App', function() {
+  let page: VogameFrontendPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new VogameFrontendPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display message saying app works', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getParagraphText()).toEqual('app works!');
   });
 });

@@ -34,6 +34,8 @@ public class CounterController {
 
     private String hashedWord = "";
 
+    private String previousWord = "";
+
     private LongmanResponse definition;
 
     @Autowired
@@ -55,7 +57,7 @@ public class CounterController {
                 hashedWord = updateHash(hashedWord, currentWord);
             }
             template.convertAndSend("/topic/word",
-                    new Word(hashedWord, definition));
+                    new Word(hashedWord, definition, previousWord));
         }
         template.convertAndSend("/topic/counter",
                 new Counter(Integer.toString(counter.decrementAndGet())));
@@ -83,6 +85,7 @@ public class CounterController {
     }
 
     private void resetWord() {
+        previousWord = currentWord;
         currentWord = wordsList.get((int) Math.floor(Math.random() * wordsList.size())).getWord();
         definition = longmanService.getLongmanDefinition(currentWord);
         hashedWord = getHashOfWord(currentWord);
@@ -92,7 +95,7 @@ public class CounterController {
         resetWord();
         counter.set(10);
         template.convertAndSend("/topic/word",
-                new Word(hashedWord, definition));
+                new Word(hashedWord, definition, previousWord));
     }
 
     public String getCurrentWord() {

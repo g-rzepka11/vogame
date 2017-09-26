@@ -6,16 +6,23 @@ public class Word {
 
     private LongmanResponse definition;
 
+    private String previousWord;
+
     public Word() {
     }
 
-    public Word(String content, LongmanResponse definition) {
+    public Word(String content, LongmanResponse definition, String previousWord) {
         this.content = content;
         this.definition = definition;
+        this.previousWord = previousWord;
     }
 
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public LongmanResponse getDefinition() {
@@ -24,5 +31,13 @@ public class Word {
 
     public void setDefinition(LongmanResponse definition) {
         this.definition = definition;
+    }
+
+    public String getPreviousWord() {
+        return previousWord;
+    }
+
+    public void setPreviousWord(String previousWord) {
+        this.previousWord = previousWord;
     }
 }

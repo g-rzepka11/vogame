@@ -13,7 +13,8 @@ export class AppComponent implements OnInit {
   public inputField = '';
   public counter: string;
   public word: string;
-  public definition: LongmanResponse;
+  public previousWord: string;
+  public definition: LongmanResponse = new LongmanResponse;
 
   constructor(private _stompService: StompService) {
   }
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
     this._stompService.getObservableWord().subscribe(payload => {
       this.word = payload.content;
       this.definition = payload.definition;
+      this.previousWord = payload.previousWord;
     });
   }
 
