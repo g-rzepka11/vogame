@@ -18,7 +18,7 @@ public class LongmanService {
     RestTemplate restTemplate = new RestTemplate();
 
     LongmanResponse longmanResponse = restTemplate
-              .getForObject("http://api.pearson.com/v2/dictionaries/lasde/entries?headword=" + word,
+              .getForObject("https://api.pearson.com/v2/dictionaries/lasde/entries?headword=" + word,
                       LongmanResponse.class);
 
     return longmanResponse;
