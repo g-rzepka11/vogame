@@ -1,4 +1,4 @@
-package com.vogame.entity;
+package com.vogame.dto;
 
 import lombok.Data;
 
@@ -8,20 +8,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(schema = "vogame", name = "translation")
+@Table(schema = "vogame", name = "game_user")
 @Data
-public class Translation {
+public class GameUserDTO {
 
     @Id
     @Column
     private Long id;
 
     @Column
-    private String text;
+    private Long gameId;
 
     @Column
-    private String partOfSpeech;
+    private Long userId;
 
     @Column
-    private Long wordId;
+    private Boolean moderator;
 }
