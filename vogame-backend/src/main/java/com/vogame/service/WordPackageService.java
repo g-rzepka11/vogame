@@ -1,6 +1,8 @@
 package com.vogame.service;
 
+import com.vogame.dto.GetWordPackagesResponse;
 import com.vogame.dto.WordPackageDTO;
+import com.vogame.dto.WordPackageDataDTO;
 import com.vogame.repository.WordPackageRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,16 @@ public class WordPackageService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<WordPackageDTO> getWordPackages() {
-        return wordPackageRepository.findAll().stream()
-                .map(wordPackage -> modelMapper.map(wordPackage, WordPackageDTO.class))
+    public GetWordPackagesResponse getWordPackages() {
+        GetWordPackagesResponse response = new GetWordPackagesResponse();
+
+        List<WordPackageDataDTO> wordPackageDataDTOS = wordPackageRepository.findAll().stream()
+                .map(wordPackage -> modelMapper.map(wordPackage, WordPackageDataDTO.class))
                 .collect(Collectors.toList());
+
+        response.setWordPackageDataDTOS(wordPackageDataDTOS);
+
+        return response;
     }
 
     public WordPackageDTO getWordPackageById(Long id) {
