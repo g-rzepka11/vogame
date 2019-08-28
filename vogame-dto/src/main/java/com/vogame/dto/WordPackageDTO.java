@@ -3,6 +3,7 @@ package com.vogame.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 public class WordPackageDTO {
@@ -12,4 +13,5 @@ public class WordPackageDTO {
     private Long userId;
     private Date createdAt;
     private String status;
+    private Set<WordDTO> words;
 }

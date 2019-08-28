@@ -1,12 +1,11 @@
 package com.vogame.entity;
 
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(schema = "vogame", name = "word_package")
@@ -31,4 +30,8 @@ public class WordPackage {
 
     @Column
     private String status;
+
+    @OneToMany(mappedBy = "wordPackageId", cascade = CascadeType.ALL)
+    @Lazy
+    private Set<Word> words;
 }

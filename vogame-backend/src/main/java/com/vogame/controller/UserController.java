@@ -1,7 +1,6 @@
 package com.vogame.controller;
 
 import com.vogame.dto.UserDTO;
-import com.vogame.entity.User;
 import com.vogame.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
