@@ -1,5 +1,3 @@
 allprojects {
     version = "1.0"
 }
-
-mainClassName = 'com.vogame.VogameApplication'
