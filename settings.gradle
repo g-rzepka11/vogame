@@ -1,0 +1,4 @@
+rootProject.name = 'vogameTest'
+include 'vogame-backend'
+include 'vogame-dto'
+
