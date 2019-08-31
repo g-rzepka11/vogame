@@ -1,5 +1,16 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
 allprojects {
     version = "1.0"
 }
 
-task stage(dependsOn: ['installDist'])
+task stage()
