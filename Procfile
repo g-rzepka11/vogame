@@ -1,1 +1,1 @@
-web: java -jar build/libs/vogame-backend.jar
+web: java -jar build/libs/vogame-backend-all.jar
