@@ -1,4 +1,4 @@
-rootProject.name = 'vogameTest'
+rootProject.name = 'vogame'
 include 'vogame-backend'
 include 'vogame-dto'
 

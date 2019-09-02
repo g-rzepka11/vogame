@@ -1,16 +1,23 @@
+apply plugin: 'idea'
+
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
-
 allprojects {
-    version = "1.0"
+    repositories {
+        mavenLocal()
+        mavenCentral() // maven { url: 'http://jcenter.bintray.com' }
+    }
 }
 
-task stage()
+subprojects {
+    apply plugin: 'com.github.johnrengelman.shadow'
+}
+
+//apply from: file("$rootProject.projectDir/gradle/heroku/stage.gradle")

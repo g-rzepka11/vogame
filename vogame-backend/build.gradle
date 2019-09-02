@@ -10,14 +10,8 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-
-bootJar {
-    baseName = 'vogame-backend'
-    version = '1.0-SNAPSHOT'
-}
 
 sourceCompatibility = 1.8
 
