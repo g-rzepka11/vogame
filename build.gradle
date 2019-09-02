@@ -1,0 +1,19 @@
+apply plugin: 'idea'
+
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+group = 'com.vogame'
+version = '0.1.0-SNAPSHOT'
+
+apply from: file('gradle/heroku/clean.gradle')
+
+subprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
