@@ -9,6 +9,8 @@ plugins {
     id "io.freefair.lombok" version "4.0.1"
 }
 
+mainClassName = 'com.vogame.VogameApplication'
+
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'

@@ -3,9 +3,9 @@ plugins {
     id "io.freefair.lombok" version "4.0.1"
 }
 
-version '1.0'
-
 sourceCompatibility = 1.8
+
+mainClassName = 'com.vogame.dto.Main'
 
 repositories {
     mavenCentral()

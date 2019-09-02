@@ -1,15 +1,8 @@
 apply plugin: 'idea'
 
-ext {
-    log4jVersion = '2.9.1'
-}
-
 buildscript {
     repositories {
         jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
     }
 }
 
@@ -23,21 +16,8 @@ allprojects {
 apply from: file('gradle/heroku/clean.gradle')
 
 subprojects {
-    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'java'
-
-    dependencies {
-        implementation 'com.google.guava:guava:23.0'
-
-        testImplementation 'junit:junit:4.12'
-
-        compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
-        compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
-        compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
-
-        testCompile 'org.mockito:mockito-core:2.11.0'
-
-    }
+    apply plugin: 'application'
 
     apply from: file("$rootProject.projectDir/gradle/heroku/stage.gradle")
 
