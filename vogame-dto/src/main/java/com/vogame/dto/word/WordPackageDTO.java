@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.word;
 
 import lombok.Data;
 

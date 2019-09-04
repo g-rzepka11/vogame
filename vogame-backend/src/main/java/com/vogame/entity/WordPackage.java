@@ -13,7 +13,7 @@ import java.util.Set;
 public class WordPackage {
 
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -31,7 +31,7 @@ public class WordPackage {
     @Column
     private String status;
 
-    @OneToMany(mappedBy = "wordPackageId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wordPackageId", cascade = CascadeType.ALL, orphanRemoval = true)
     @Lazy
     private Set<Word> words;
 }
