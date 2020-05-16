@@ -13,9 +13,9 @@ public class WordPackageController {
     @Autowired
     private WordPackageService wordPackageService;
 
-    @GetMapping("/list")
-    public GetWordPackagesResponse getWordPackages() {
-        return wordPackageService.getWordPackages();
+    @GetMapping("/getByUserId/{userId}")
+    public GetWordPackagesResponse getByUserId(@PathVariable("userId") Long userId) {
+        return wordPackageService.getWordPackages(userId);
     }
 
     @GetMapping("/getone/{id}")

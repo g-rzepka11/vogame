@@ -1,34 +1,34 @@
 package com.vogame.controller;
 
 import com.vogame.dto.UserDTO;
-import com.vogame.repository.UserRepository;
-import org.modelmapper.ModelMapper;
+import com.vogame.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    private ModelMapper modelMapper;
+    private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @GetMapping("/users")
+    @GetMapping("/")
     public List<UserDTO> getUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+        return userService.getUsers();
     }
 
-    @GetMapping("/users/{id}")
-    public UserDTO replaceEmployee(@PathVariable Long id) {
-        return modelMapper.map(userRepository.findById(id).get(), UserDTO.class);
+    @GetMapping("/id/{id}")
+    public UserDTO getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping("/email/{email}")
+    public UserDTO getUserByEmail(@PathVariable String email) {
+        return userService.getUserByEmail(email);
     }
 }

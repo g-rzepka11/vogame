@@ -2,10 +2,7 @@ package com.vogame.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(schema = "vogame", name = "game")
@@ -31,6 +28,7 @@ public class Game {
     @Column
     private Long wordPackageId;
 
-    @Column
-    private Long nextWord;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "word")
+    private Word word;
 }

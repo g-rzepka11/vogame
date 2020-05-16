@@ -21,7 +21,5 @@ public class Word {
     @Column
     private Long wordPackageId;
 
-    @OneToMany(mappedBy = "wordId", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Lazy
-    private Set<Translation> translations;
+    private String translation;
 }

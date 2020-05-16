@@ -22,10 +22,10 @@ public class WordPackageService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public GetWordPackagesResponse getWordPackages() {
+    public GetWordPackagesResponse getWordPackages(Long userId) {
         GetWordPackagesResponse response = new GetWordPackagesResponse();
 
-        List<WordPackageDataDTO> wordPackageDataDTOS = wordPackageRepository.findAll().stream()
+        List<WordPackageDataDTO> wordPackageDataDTOS = wordPackageRepository.findByUserId(userId).stream()
                 .map(wordPackage -> modelMapper.map(wordPackage, WordPackageDataDTO.class))
                 .collect(Collectors.toList());
 

@@ -2,12 +2,13 @@ package com.vogame.dto.word;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @Data
-public class WordDTO {
+public class WordDTO implements Serializable {
     private Long id;
     private String text;
     private Long wordPackageId;
-    private Set<TranslationDTO> translations;
+    private String translation;
 }

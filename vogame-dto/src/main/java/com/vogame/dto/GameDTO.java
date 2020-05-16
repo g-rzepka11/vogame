@@ -1,5 +1,6 @@
 package com.vogame.dto;
 
+import com.vogame.dto.word.WordDTO;
 import lombok.Data;
 
 @Data
@@ -10,5 +11,5 @@ public class GameDTO {
     private String status;
     private Long currentUser;
     private Long wordPackageId;
-    private Long nextWord;
+    private WordDTO word;
 }
