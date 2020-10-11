@@ -1,27 +1,53 @@
 package com.vogame.entity;
 
-import lombok.Data;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(schema = "vogame", name = "game_user")
-@Data
 public class GameUser {
 
     @Id
     @Column
     private Long id;
 
-    @Column
-    private Long gameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Game game;
 
-    @Column
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Column
     private Boolean moderator;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Boolean getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(Boolean moderator) {
+        this.moderator = moderator;
+    }
 }

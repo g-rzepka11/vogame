@@ -24,8 +24,8 @@ public class WordPackageController {
     }
 
     @PostMapping("/modify")
-    public void modifyWordPackage(@RequestBody WordPackageDTO wordPackageDTO) {
-        wordPackageService.modifyWordPackage(wordPackageDTO);
+    public WordPackageDTO modifyWordPackage(@RequestBody WordPackageDTO wordPackageDTO) {
+        return wordPackageService.modifyWordPackage(wordPackageDTO);
     }
 
 }

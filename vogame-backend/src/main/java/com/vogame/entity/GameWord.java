@@ -1,34 +1,55 @@
 package com.vogame.entity;
 
-import lombok.Data;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(schema = "vogame", name = "game_word")
-@Data
 public class GameWord {
 
     @Id
     @Column
     private Long id;
 
-    @Column
-    private Long gameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Game game;
 
-    @Column
-    private Long wordId;
+    @OneToMany(mappedBy = "gameWord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameWordUserScore> gameWordUserScores;
 
-    @Column
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Word word;
 
-    @Column
-    private Long userId;
+    public Long getId() {
+        return id;
+    }
 
-    @Column
-    private BigDecimal score;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public List<GameWordUserScore> getGameWordUserScores() {
+        return gameWordUserScores;
+    }
+
+    public void setGameWordUserScores(List<GameWordUserScore> gameWordUserScores) {
+        this.gameWordUserScores = gameWordUserScores;
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public void setWord(Word word) {
+        this.word = word;
+    }
 }

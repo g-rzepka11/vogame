@@ -1,7 +1,5 @@
 package com.vogame.dto.word;
 
-import lombok.Data;
-
 import java.util.List;
 
 public class GetWordPackagesResponse {

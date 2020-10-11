@@ -38,9 +38,9 @@ public class WordPackageService {
         return modelMapper.map(wordPackageRepository.findById(id).get(), WordPackageDTO.class);
     }
 
-    public void modifyWordPackage(WordPackageDTO wordPackageDTO) {
+    public WordPackageDTO modifyWordPackage(WordPackageDTO wordPackageDTO) {
         WordPackage wordPackage = modelMapper.map(wordPackageDTO, WordPackage.class);
-        wordPackageRepository.save(wordPackage);
+        return modelMapper.map(wordPackageRepository.save(wordPackage), WordPackageDTO.class);
     }
 
 }
