@@ -33,7 +33,7 @@ public class Filters {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(restFilter);
         filterRegistrationBean.setUrlPatterns(
-                Arrays.asList("/wordpackages/*", /*"/games/*",*/ "/users/*"));
+                Arrays.asList("/wordpackages/*", "/games/*", "/users/*"));
         return filterRegistrationBean;
     }
 }

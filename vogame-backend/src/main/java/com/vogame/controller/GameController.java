@@ -16,9 +16,9 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping("/getByOwnerId/{ownerId}")
-    public List<GameDTO> getGameByOwnerId(@PathVariable("ownerId") Long ownerId) {
-        return gameService.getGameByOwnerId(ownerId);
+    @GetMapping("/getByUserId/{userId}")
+    public List<GameDTO> getGameByUserId(@PathVariable("userId") Long userId) {
+        return gameService.getGameByUserId(userId);
     }
 
     @GetMapping("/id/{id}")

@@ -33,8 +33,8 @@ public class GameService {
     @Autowired
     private HashUtils hashUtils;
 
-    public List<GameDTO> getGameByOwnerId(Long ownerId) {
-        return gameRepository.findByOwner(ownerId).stream()
+    public List<GameDTO> getGameByUserId(Long userId) {
+        return gameRepository.findByUserId(userId).stream()
                 .map(wordPackage -> modelMapper.map(wordPackage, GameDTO.class))
                 .collect(Collectors.toList());
     }
