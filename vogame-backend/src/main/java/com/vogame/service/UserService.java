@@ -42,4 +42,8 @@ public class UserService {
         return modelMapper.map(user, UserDTO.class);
     }
 
+    public boolean isUserEmailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
 }

@@ -31,4 +31,9 @@ public class UserController {
     public UserDTO getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
+
+    @GetMapping("/emailExists/{email}")
+    public Boolean isUserEmailExists(@PathVariable String email) {
+        return userService.isUserEmailExists(email);
+    }
 }

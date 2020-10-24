@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class GameWordUserScore {
 
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

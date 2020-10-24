@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class GameUser {
 
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

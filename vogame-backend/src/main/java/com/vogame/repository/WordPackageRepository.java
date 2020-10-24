@@ -9,4 +9,7 @@ public interface WordPackageRepository extends JpaRepository<WordPackage, Long> 
 
     List<WordPackage> findByUserId(Long userId);
 
+    Boolean existsByWordPackageName(String wordPackageName);
+
+    WordPackage findFirstByWordPackageName(String wordPackageName);
 }

@@ -28,4 +28,9 @@ public class WordPackageController {
         return wordPackageService.modifyWordPackage(wordPackageDTO);
     }
 
+    @GetMapping("/byNameExists/{wordPackageName}")
+    public Boolean isWordPackageByNameExists(@PathVariable("wordPackageName") String wordPackageName) {
+        return wordPackageService.isWordPackageByNameExists(wordPackageName);
+    }
+
 }

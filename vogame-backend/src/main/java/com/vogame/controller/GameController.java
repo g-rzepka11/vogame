@@ -1,8 +1,6 @@
 package com.vogame.controller;
 
-import com.vogame.dto.CheckWordRequest;
-import com.vogame.dto.GameDTO;
-import com.vogame.dto.SelectNextRequest;
+import com.vogame.dto.*;
 import com.vogame.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +47,15 @@ public class GameController {
     @PostMapping("/selectnext")
     public GameDTO selectNext(@RequestBody SelectNextRequest request){
         return gameService.selectNext(request);
+    }
+
+    @PostMapping("/createNew")
+    public Long createNewGame(@RequestBody CreateNewGameRequest request) {
+        return gameService.createNewGame(request);
+    }
+
+    @PostMapping("/startGame")
+    public void startGame(@RequestBody StartGameRequest startGameRequest) {
+        gameService.startGame(startGameRequest);
     }
 }

@@ -43,4 +43,7 @@ public class WordPackageService {
         return modelMapper.map(wordPackageRepository.save(wordPackage), WordPackageDTO.class);
     }
 
+    public Boolean isWordPackageByNameExists(String wordPackageName) {
+        return wordPackageRepository.existsByWordPackageName(wordPackageName);
+    }
 }

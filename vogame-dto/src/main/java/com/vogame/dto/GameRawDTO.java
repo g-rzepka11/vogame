@@ -1,44 +1,15 @@
-package com.vogame.entity;
+package com.vogame.dto;
 
-import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
-@Entity
-@Table(schema = "vogame", name = "game")
-public class Game {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class GameRawDTO {
     private Long id;
-
-    @Column
     private String name;
-
-    @Column
     private Long owner;
-
-    @Column
     private Integer status;
-
-    @Column
     private Long curUser;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "word")
-    private Word word;
-
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GameUser> gameUsers;
-
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GameWord> gameWords;
-
-    @Column
-    private Date wordTime;
-
-    @Column
     private String hashedWord;
+    private Date wordTime;
 
     public Long getId() {
         return id;
@@ -80,36 +51,12 @@ public class Game {
         this.curUser = curUser;
     }
 
-    public Word getWord() {
-        return word;
-    }
-
-    public void setWord(Word word) {
-        this.word = word;
-    }
-
     public String getHashedWord() {
         return hashedWord;
     }
 
     public void setHashedWord(String hashedWord) {
         this.hashedWord = hashedWord;
-    }
-
-    public List<GameUser> getGameUsers() {
-        return gameUsers;
-    }
-
-    public void setGameUsers(List<GameUser> gameUsers) {
-        this.gameUsers = gameUsers;
-    }
-
-    public List<GameWord> getGameWords() {
-        return gameWords;
-    }
-
-    public void setGameWords(List<GameWord> gameWords) {
-        this.gameWords = gameWords;
     }
 
     public Date getWordTime() {

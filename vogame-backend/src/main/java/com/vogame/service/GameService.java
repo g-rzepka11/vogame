@@ -1,18 +1,16 @@
 package com.vogame.service;
 
-import com.vogame.dto.SelectNextRequest;
+import com.vogame.dto.*;
 import com.vogame.dto.enums.GameStatus;
-import com.vogame.dto.CheckWordRequest;
-import com.vogame.dto.GameDTO;
-import com.vogame.entity.Game;
-import com.vogame.repository.GameRepository;
-import com.vogame.repository.WordRepository;
+import com.vogame.entity.*;
+import com.vogame.repository.*;
 import com.vogame.util.HashUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +24,15 @@ public class GameService {
 
     @Autowired
     private WordRepository wordRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
+
+    @Autowired
+    private WordPackageRepository wordPackageRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -108,5 +115,61 @@ public class GameService {
 
         gameRepository.save(game);
         return modelMapper.map(game, GameDTO.class);
+    }
+
+    public Long createNewGame(CreateNewGameRequest request) {
+        Game game = new Game();
+        game.setName(request.getGameName());
+        game.setStatus(GameStatus.NOT_STARTED.getStatusId());
+        game.setOwner(request.getUserId());
+        game.setCurUser(request.getUserId());
+        game.setGameUsers(new ArrayList<>());
+
+        User user = userRepository.findById(request.getUserId()).get();
+        GameUser gameUser = new GameUser();
+        gameUser.setUser(user);
+        gameUser.setGame(game);
+        gameUser.setModerator(true);
+        game.getGameUsers().add(gameUser);
+
+        addWords(game, request.getWordPackageName());
+
+        Game savedGame = gameRepository.save(game);
+
+        inviteUsers(request.getUserId(), game, request.getInvitedUserEmails());
+
+        return savedGame.getId();
+    }
+
+    private void addWords(Game game, String wordPackageName) {
+        WordPackage wordPackage = wordPackageRepository.findFirstByWordPackageName(wordPackageName);
+        game.setGameWords(new ArrayList<>());
+
+        wordPackage.getWords().stream().forEach(wp -> {
+            GameWord gameWord = new GameWord();
+            gameWord.setGame(game);
+            gameWord.setWord(wp);
+            game.getGameWords().add(gameWord);
+        });
+    }
+
+    private void inviteUsers(Long userId, Game game, List<String> invitedUserEmails) {
+        invitedUserEmails.stream().forEach(userEmail -> {
+            Invitation invitation = new Invitation();
+            invitation.setGame(game);
+            invitation.setCreatedAt(new Date());
+            invitation.setHostUser(userId);
+            invitation.setInvitee(userRepository.findFirstByEmail(userEmail));
+            invitationRepository.save(invitation);
+        });
+    }
+
+    public void startGame(StartGameRequest startGameRequest) {
+        invitationRepository.deleteAllByGame_Id(startGameRequest.getGameId());
+
+        Game game = gameRepository.getOne(startGameRequest.getGameId());
+        game.setCurUser(startGameRequest.getUserId());
+        game.setStatus(GameStatus.SELECT.getStatusId());
+        gameRepository.save(game);
     }
 }
