@@ -11,13 +11,14 @@ public class LearnUserWord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @OneToOne
+    private LearnUser learnUser;
 
-    private Long status;
+    private Integer status;
 
     private Date checkWordDate;
 
-    private Long knowledgeLevel;
+    private Integer knowledgeLevel;
 
     private Date createDate;
 
@@ -33,19 +34,19 @@ public class LearnUserWord {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return this.userId;
+    public LearnUser getLearnUser() {
+        return learnUser;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setLearnUser(LearnUser learnUser) {
+        this.learnUser = learnUser;
     }
 
-    public Long getStatus() {
+    public Integer getStatus() {
         return this.status;
     }
 
-    public void setStatus(Long status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -57,11 +58,11 @@ public class LearnUserWord {
         this.checkWordDate = checkWordDate;
     }
 
-    public Long getKnowledgeLevel() {
+    public Integer getKnowledgeLevel() {
         return this.knowledgeLevel;
     }
 
-    public void setKnowledgeLevel(Long knowledgeLevel) {
+    public void setKnowledgeLevel(Integer knowledgeLevel) {
         this.knowledgeLevel = knowledgeLevel;
     }
 

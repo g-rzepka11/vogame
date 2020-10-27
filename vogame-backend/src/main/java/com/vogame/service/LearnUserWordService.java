@@ -3,6 +3,7 @@ package com.vogame.service;
 import com.vogame.dto.LearnUserWordDTO;
 import com.vogame.dto.SaveLearnUserWordsRequest;
 import com.vogame.entity.LearnUserWord;
+import com.vogame.repository.LearnUserRepository;
 import com.vogame.repository.LearnUserWordRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +22,22 @@ public class LearnUserWordService {
     @Autowired
     private LearnUserWordRepository learnUserWordRepository;
 
+    @Autowired
+    private LearnUserRepository learnUserRepository;
+
     public List<LearnUserWordDTO> getByUserId(Long userId) {
-        return learnUserWordRepository.findByUserId(userId).stream()
+        return learnUserWordRepository.findByLearnUser_User_Id(userId).stream()
                 .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
                 .collect(Collectors.toList());
     }
 
     public LearnUserWordDTO save(SaveLearnUserWordsRequest request) {
-        LearnUserWord word = null;
+        LearnUserWord word;
         if(request.getLearnUserWordId() == null) {
             word = new LearnUserWord();
             word.setCreateDate(new Date());
-            word.setStatus(0L);
-            word.setUserId(request.getUserId());
+            word.setStatus(0);
+            word.setLearnUser(learnUserRepository.findFirstByUser_Id(request.getUserId()));
         } else {
             word = learnUserWordRepository.getOne(request.getLearnUserWordId());
         }
