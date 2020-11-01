@@ -1,6 +1,8 @@
 package com.vogame.service;
 
+import com.vogame.dto.LearnStatsDTO;
 import com.vogame.dto.LearnUserWordDTO;
+import com.vogame.dto.SaveLearnUserWordsRequest;
 import com.vogame.entity.LearnUser;
 import com.vogame.entity.LearnUserWord;
 import com.vogame.repository.LearnUserRepository;
@@ -18,16 +20,43 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class LearnUserService {
+public class LearnService {
 
     @Autowired
-    private LearnUserRepository learnUserRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
     private LearnUserWordRepository learnUserWordRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private LearnUserRepository learnUserRepository;
+
+    public List<LearnUserWordDTO> getByUserId(Long userId) {
+        return learnUserWordRepository.findByLearnUser_User_Id(userId).stream()
+                .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public LearnUserWordDTO save(SaveLearnUserWordsRequest request) {
+        LearnUserWord word;
+        if(request.getLearnUserWordId() == null) {
+            word = new LearnUserWord();
+            word.setCreateDate(new Date());
+            word.setStatus(0);
+            word.setLearnUser(learnUserRepository.findFirstByUser_Id(request.getUserId()));
+        } else {
+            word = learnUserWordRepository.getOne(request.getLearnUserWordId());
+        }
+
+        word.setWord(request.getWord());
+        word.setTranslation(request.getTranslation());
+        LearnUserWord saveLearnUserWord = learnUserWordRepository.save(word);
+        return modelMapper.map(saveLearnUserWord, LearnUserWordDTO.class);
+    }
+
+    public void delete(Long id) {
+        learnUserWordRepository.deleteById(id);
+    }
 
     public List<LearnUserWordDTO> startLearning(Long userId) {
         LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
@@ -93,5 +122,28 @@ public class LearnUserService {
                 throw new RuntimeException("Unknown level");
 
         }
+    }
+
+    public LearnStatsDTO getStats(Long userId) {
+        LearnStatsDTO learnStatsDTO = new LearnStatsDTO();
+
+        LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
+
+        learnStatsDTO.setStatsForDate(learnUser.getLastLearningDate());
+
+        learnStatsDTO.setTotalWords(learnUserWordRepository.countByLearnUser_User_Id(userId));
+
+        learnStatsDTO.setLearnedWords(learnUserWordRepository
+                .countByLearnUser_User_IdAndStatus(userId, 2));
+
+        learnStatsDTO.setPendingWords(learnUserWordRepository
+                .countByCheckWordDateAndLearnUser_User_IdAndStatus(null, userId, 0));
+
+        learnStatsDTO.setRemainingWordsForDay(learnUserWordRepository
+                .countByCheckWordDateAndLearnUser_User_IdAndStatus(
+                        DateUtil.localDateToDate(LocalDate.now()),
+                        userId, 1));
+
+        return learnStatsDTO;
     }
 }
