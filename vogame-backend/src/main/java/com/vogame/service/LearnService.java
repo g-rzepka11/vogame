@@ -2,6 +2,7 @@ package com.vogame.service;
 
 import com.vogame.dto.LearnStatsDTO;
 import com.vogame.dto.LearnUserWordDTO;
+import com.vogame.dto.LearnUserWordsPageResponse;
 import com.vogame.dto.SaveLearnUserWordsRequest;
 import com.vogame.entity.LearnUser;
 import com.vogame.entity.LearnUserWord;
@@ -10,6 +11,7 @@ import com.vogame.repository.LearnUserWordRepository;
 import com.vogame.util.DateUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ public class LearnService {
 
     @Autowired
     private LearnUserRepository learnUserRepository;
+
+    private static final Integer pageSize = 10;
 
     public List<LearnUserWordDTO> getByUserId(Long userId) {
         return learnUserWordRepository.findByLearnUser_User_Id(userId).stream()
@@ -145,5 +149,24 @@ public class LearnService {
                         userId, 1));
 
         return learnStatsDTO;
+    }
+
+    public LearnUserWordsPageResponse getByUserId(Long userId, Integer pageNumber) {
+        Integer count = learnUserWordRepository.countByLearnUser_User_Id(userId);
+        if(pageNumber == null) {
+            pageNumber = (count-1)/pageSize;
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<LearnUserWord> result = learnUserWordRepository.findByLearnUser_User_Id(userId, pageable);
+
+        LearnUserWordsPageResponse response = new LearnUserWordsPageResponse();
+        response.setLearnUserWordDTOS(result.getContent().stream()
+                .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
+                .collect(Collectors.toList()));
+        response.setPageNumber(result.getNumber());
+        response.setTotalPages(result.getTotalPages());
+        return response;
     }
 }

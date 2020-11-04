@@ -2,6 +2,7 @@ package com.vogame.controller;
 
 import com.vogame.dto.LearnStatsDTO;
 import com.vogame.dto.LearnUserWordDTO;
+import com.vogame.dto.LearnUserWordsPageResponse;
 import com.vogame.dto.SaveLearnUserWordsRequest;
 import com.vogame.service.LearnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,10 @@ public class LearnController {
     @Autowired
     private LearnService learnService;
 
-    @GetMapping("/user/{userId}")
-    public List<LearnUserWordDTO> getByUserId(@PathVariable("userId") Long userId) {
-        return learnService.getByUserId(userId);
-    }
+//    @GetMapping("/user/{userId}")
+//    public List<LearnUserWordDTO> getByUserId(@PathVariable("userId") Long userId) {
+//        return learnService.getByUserId(userId);
+//    }
 
     @PostMapping("/save")
     public LearnUserWordDTO saveLearnUserWord(@RequestBody SaveLearnUserWordsRequest saveLearnUserWordsRequest) {
@@ -51,4 +52,8 @@ public class LearnController {
         return learnService.getStats(userId);
     }
 
+    @GetMapping("/user/{userId}")
+    public LearnUserWordsPageResponse getByUserIdPage(@PathVariable("userId") Long userId, @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
+        return learnService.getByUserId(userId, pageNumber);
+    }
 }
