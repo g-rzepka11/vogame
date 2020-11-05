@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +64,7 @@ public class LearnService {
     public List<LearnUserWordDTO> startLearning(Long userId) {
         LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
 
-        Date startOfToday = DateUtil.localDateToDate(LocalDate.now());
+        Date startOfToday = DateUtil.startOfTodayUTC();
 
         if(learnUser.getLastLearningDate() == null
                 || startOfToday.after(learnUser.getLastLearningDate())) {
@@ -97,7 +96,9 @@ public class LearnService {
         } else {
             word.setKnowledgeLevel(word.getKnowledgeLevel() + 1);
             int daysNumberToAdd = getDaysNumberToAdd(word.getKnowledgeLevel());
-            word.setCheckWordDate(DateUtil.localDateToDate(LocalDate.now().plusDays(daysNumberToAdd)));
+            word.setCheckWordDate(
+                    DateUtil.localDateTimeToDateUTC(
+                            DateUtil.startOfDayLocalDateTime().plusDays(daysNumberToAdd)));
         }
         learnUserWordRepository.save(word);
     }
@@ -145,7 +146,7 @@ public class LearnService {
 
         learnStatsDTO.setRemainingWordsForDay(learnUserWordRepository
                 .countByCheckWordDateAndLearnUser_User_IdAndStatus(
-                        DateUtil.localDateToDate(LocalDate.now()),
+                        DateUtil.startOfTodayUTC(),
                         userId, 1));
 
         return learnStatsDTO;

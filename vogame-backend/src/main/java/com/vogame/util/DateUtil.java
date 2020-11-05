@@ -1,7 +1,6 @@
 package com.vogame.util;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.Date;
 
 public class DateUtil {
@@ -14,6 +13,19 @@ public class DateUtil {
 
     public static LocalDate dateToLocalDate(Date in) {
         return in.toInstant().atZone(defaultZoneId).toLocalDate();
+    }
+
+    public static Date startOfTodayUTC() {
+        LocalDateTime startOfDay = startOfDayLocalDateTime();
+        return localDateTimeToDateUTC(startOfDay);
+    }
+
+    public static LocalDateTime startOfDayLocalDateTime() {
+        return LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+    }
+
+    public static Date localDateTimeToDateUTC(LocalDateTime startOfDay) {
+        return Date.from(startOfDay.toInstant(ZoneOffset.UTC));
     }
 
 }
