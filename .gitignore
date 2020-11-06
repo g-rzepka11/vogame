@@ -31,3 +31,4 @@ build/
 .vscode/
 
 .gradle/**
+/vogame-backend/src/main/resources/datasource.properties
