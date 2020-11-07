@@ -14,7 +14,7 @@ public class LearnUser {
     @OneToOne
     private User user;
 
-    private Long dailyNewWordsCount;
+    private Integer dailyNewWordsCount;
 
     private Date lastLearningDate;
 
@@ -35,11 +35,11 @@ public class LearnUser {
         this.user = user;
     }
 
-    public Long getDailyNewWordsCount() {
+    public Integer getDailyNewWordsCount() {
         return this.dailyNewWordsCount;
     }
 
-    public void setDailyNewWordsCount(Long dailyNewWordsCount) {
+    public void setDailyNewWordsCount(Integer dailyNewWordsCount) {
         this.dailyNewWordsCount = dailyNewWordsCount;
     }
 

@@ -1,9 +1,6 @@
 package com.vogame.controller;
 
-import com.vogame.dto.LearnStatsDTO;
-import com.vogame.dto.LearnUserWordDTO;
-import com.vogame.dto.LearnUserWordsPageResponse;
-import com.vogame.dto.SaveLearnUserWordsRequest;
+import com.vogame.dto.*;
 import com.vogame.service.LearnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +13,6 @@ public class LearnController {
 
     @Autowired
     private LearnService learnService;
-
-//    @GetMapping("/user/{userId}")
-//    public List<LearnUserWordDTO> getByUserId(@PathVariable("userId") Long userId) {
-//        return learnService.getByUserId(userId);
-//    }
 
     @PostMapping("/save")
     public LearnUserWordDTO saveLearnUserWord(@RequestBody SaveLearnUserWordsRequest saveLearnUserWordsRequest) {
@@ -55,5 +47,15 @@ public class LearnController {
     @GetMapping("/user/{userId}")
     public LearnUserWordsPageResponse getByUserIdPage(@PathVariable("userId") Long userId, @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
         return learnService.getByUserId(userId, pageNumber);
+    }
+
+    @GetMapping("/user/{userId}/config")
+    public LearnConfigDTO getConfig(@PathVariable("userId") Long userId) {
+        return learnService.getConfig(userId);
+    }
+
+    @PostMapping("/user/{userId}/config")
+    public void saveConfig(@PathVariable("userId") Long userId, @RequestBody LearnConfigDTO learnConfigDTO) {
+        learnService.saveConfig(userId, learnConfigDTO);
     }
 }

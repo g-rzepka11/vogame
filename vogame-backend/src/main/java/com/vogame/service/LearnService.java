@@ -1,9 +1,6 @@
 package com.vogame.service;
 
-import com.vogame.dto.LearnStatsDTO;
-import com.vogame.dto.LearnUserWordDTO;
-import com.vogame.dto.LearnUserWordsPageResponse;
-import com.vogame.dto.SaveLearnUserWordsRequest;
+import com.vogame.dto.*;
 import com.vogame.entity.LearnUser;
 import com.vogame.entity.LearnUserWord;
 import com.vogame.repository.LearnUserRepository;
@@ -33,12 +30,6 @@ public class LearnService {
     private LearnUserRepository learnUserRepository;
 
     private static final Integer pageSize = 10;
-
-    public List<LearnUserWordDTO> getByUserId(Long userId) {
-        return learnUserWordRepository.findByLearnUser_User_Id(userId).stream()
-                .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
-                .collect(Collectors.toList());
-    }
 
     public LearnUserWordDTO save(SaveLearnUserWordsRequest request) {
         LearnUserWord word;
@@ -169,5 +160,18 @@ public class LearnService {
         response.setPageNumber(result.getNumber());
         response.setTotalPages(result.getTotalPages());
         return response;
+    }
+
+    public LearnConfigDTO getConfig(Long userId) {
+        LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
+        LearnConfigDTO learnConfigDTO = new LearnConfigDTO();
+        learnConfigDTO.setWordsPerDay(learnUser.getDailyNewWordsCount());
+        return learnConfigDTO;
+    }
+
+    public void saveConfig(Long userId, LearnConfigDTO learnConfigDTO) {
+        LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
+        learnUser.setDailyNewWordsCount(learnConfigDTO.getWordsPerDay());
+        learnUserRepository.save(learnUser);
     }
 }
