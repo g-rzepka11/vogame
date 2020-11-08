@@ -151,7 +151,8 @@ public class LearnService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        Page<LearnUserWord> result = learnUserWordRepository.findByLearnUser_User_Id(userId, pageable);
+        Page<LearnUserWord> result = learnUserWordRepository
+                .findByLearnUser_User_IdOrderByCreateDateAsc(userId, pageable);
 
         LearnUserWordsPageResponse response = new LearnUserWordsPageResponse();
         response.setLearnUserWordDTOS(result.getContent().stream()

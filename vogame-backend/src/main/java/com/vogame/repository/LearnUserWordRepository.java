@@ -12,7 +12,7 @@ public interface LearnUserWordRepository extends JpaRepository<LearnUserWord, Lo
 
     List<LearnUserWord> findByLearnUser_User_Id(Long userId);
 
-    Page<LearnUserWord> findByLearnUser_User_Id(Long userId, Pageable pageable);
+    Page<LearnUserWord> findByLearnUser_User_IdOrderByCreateDateAsc(Long userId, Pageable pageable);
 
     List<LearnUserWord> findByLearnUser_User_IdAndStatusOrderByCreateDateAsc(Long userId, Integer status, Pageable ten);
 
