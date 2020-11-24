@@ -1,6 +1,10 @@
 package com.vogame.service;
 
-import com.vogame.dto.UserDTO;
+import com.vogame.dto.user.UserDTO;
+import com.vogame.dto.user.response.GetUserByEmailResponse;
+import com.vogame.dto.user.response.GetUserByIdResponse;
+import com.vogame.dto.user.response.GetUsersResponse;
+import com.vogame.dto.user.response.IsUserEmailExistsResponse;
 import com.vogame.entity.User;
 import com.vogame.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -19,17 +23,18 @@ public class UserService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<UserDTO> getUsers() {
-        return userRepository.findAll().stream()
+    public GetUsersResponse getUsers() {
+        return GetUsersResponse.builder().payload(userRepository.findAll().stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())).build();
     }
 
-    public UserDTO getUserById(Long id) {
-        return modelMapper.map(userRepository.findById(id).get(), UserDTO.class);
+    public GetUserByIdResponse getUserById(Long id) {
+        return GetUserByIdResponse.builder()
+                .payload(modelMapper.map(userRepository.findById(id).get(), UserDTO.class)).build();
     }
 
-    public UserDTO getUserByEmail(String email) {
+    public GetUserByEmailResponse getUserByEmail(String email) {
 
         User user = userRepository.findFirstByEmail(email);
 
@@ -39,11 +44,11 @@ public class UserService {
             user = userRepository.save(newUser);
         }
 
-        return modelMapper.map(user, UserDTO.class);
+        return GetUserByEmailResponse.builder().payload(modelMapper.map(user, UserDTO.class)).build();
     }
 
-    public boolean isUserEmailExists(String email) {
-        return userRepository.existsByEmail(email);
+    public IsUserEmailExistsResponse isUserEmailExists(String email) {
+        return IsUserEmailExistsResponse.builder().payload(userRepository.existsByEmail(email)).build();
     }
 
 }

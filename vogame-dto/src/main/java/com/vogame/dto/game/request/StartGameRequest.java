@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.game.request;
 
 public class StartGameRequest {
     private Long userId;

@@ -1,7 +1,12 @@
 package com.vogame.service;
 
-import com.vogame.dto.*;
+import com.vogame.dto.common.AbstractVogameResponse;
 import com.vogame.dto.enums.GameStatus;
+import com.vogame.dto.game.GameDTO;
+import com.vogame.dto.game.request.CreateNewGameRequest;
+import com.vogame.dto.game.request.SelectNextRequest;
+import com.vogame.dto.game.request.StartGameRequest;
+import com.vogame.dto.game.response.*;
 import com.vogame.entity.*;
 import com.vogame.repository.*;
 import com.vogame.util.HashUtils;
@@ -40,17 +45,19 @@ public class GameService {
     @Autowired
     private HashUtils hashUtils;
 
-    public List<GameDTO> getGameByUserId(Long userId) {
-        return gameRepository.findByUserId(userId).stream()
+    public GetGameByUserIdResponse getGameByUserId(Long userId) {
+        List<GameDTO> gameDtos = gameRepository.findByUserId(userId).stream()
                 .map(wordPackage -> modelMapper.map(wordPackage, GameDTO.class))
                 .collect(Collectors.toList());
+        return GetGameByUserIdResponse.builder().payload(gameDtos).build();
     }
 
-    public GameDTO getGameById(Long id) {
-        return modelMapper.map(gameRepository.findById(id).get(), GameDTO.class);
+    public GetGameByIdResponse getGameById(Long id) {
+        return GetGameByIdResponse.builder()
+                .payload(modelMapper.map(gameRepository.findById(id).get(), GameDTO.class)).build();
     }
 
-    public GameDTO updateHash(Long id) {
+    public GameUpdateHashResponse updateHash(Long id) {
         Game game = gameRepository.findById(id).get();
         if(game != null) {
             game.setHashedWord(hashUtils.updateHash(game.getHashedWord(), game.getWord().getText()));
@@ -59,10 +66,10 @@ public class GameService {
 
         gameRepository.save(game);
 
-        return modelMapper.map(game, GameDTO.class);
+        return GameUpdateHashResponse.builder().payload(modelMapper.map(game, GameDTO.class)).build();
     }
 
-    public GameDTO updateDateAndHash(Long id) {
+    public GameUpdateDateAndHashResponse updateDateAndHash(Long id) {
         Game game = gameRepository.findById(id).get();
         if(game != null) {
             int hashedSignCount = StringUtils.countOccurrencesOf(game.getHashedWord(), "_");
@@ -74,7 +81,8 @@ public class GameService {
             gameRepository.save(game);
         }
 
-        return modelMapper.map(game, GameDTO.class);
+        return GameUpdateDateAndHashResponse.builder()
+                .payload(modelMapper.map(game, GameDTO.class)).build();
     }
 
     private int getUpdateTimes(Date wordTime, int hashedSignCount) {
@@ -86,27 +94,17 @@ public class GameService {
         return Math.min(hashedSignCount, (int)Math.floorDiv(differenceInSeconds, 10L));
     }
 
-    public boolean checkWord(CheckWordRequest checkWordRequest) {
-        Game game = gameRepository.findById(checkWordRequest.getGameId()).get();
-
-        if(game != null) {
-            if(game.getWord().getText().equals(checkWordRequest.getWord())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public GameDTO wordGuessed(Long id) {
+    public GameWordGuessedResponse wordGuessed(Long id) {
         Game game = gameRepository.findById(id).get();
         game.setStatus(GameStatus.SELECT.getStatusId());
         game.setWordTime(null);
         //TODO: update score
         gameRepository.save(game);
-        return modelMapper.map(game, GameDTO.class);
+        return GameWordGuessedResponse.builder()
+                .payload(modelMapper.map(game, GameDTO.class)).build();
     }
 
-    public GameDTO selectNext(SelectNextRequest request) {
+    public GameSelectNextResponse selectNext(SelectNextRequest request) {
         Game game = gameRepository.findById(request.getGameId()).get();
         game.setCurUser(request.getUserId());
         game.setWord(wordRepository.findById(request.getWordId()).get());
@@ -114,10 +112,10 @@ public class GameService {
         game.setStatus(GameStatus.ACTION.getStatusId());
 
         gameRepository.save(game);
-        return modelMapper.map(game, GameDTO.class);
+        return GameSelectNextResponse.builder().payload(modelMapper.map(game, GameDTO.class)).build();
     }
 
-    public Long createNewGame(CreateNewGameRequest request) {
+    public CreateNewGameResponse createNewGame(CreateNewGameRequest request) {
         Game game = new Game();
         game.setName(request.getGameName());
         game.setStatus(GameStatus.NOT_STARTED.getStatusId());
@@ -138,7 +136,7 @@ public class GameService {
 
         inviteUsers(request.getUserId(), game, request.getInvitedUserEmails());
 
-        return savedGame.getId();
+        return CreateNewGameResponse.builder().payload(savedGame.getId()).build();
     }
 
     private void addWords(Game game, String wordPackageName) {
@@ -164,12 +162,13 @@ public class GameService {
         });
     }
 
-    public void startGame(StartGameRequest startGameRequest) {
+    public AbstractVogameResponse startGame(StartGameRequest startGameRequest) {
         invitationRepository.deleteAllByGame_Id(startGameRequest.getGameId());
 
         Game game = gameRepository.getOne(startGameRequest.getGameId());
         game.setCurUser(startGameRequest.getUserId());
         game.setStatus(GameStatus.SELECT.getStatusId());
         gameRepository.save(game);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 }

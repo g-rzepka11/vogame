@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.game.request;
 
 public class SelectNextRequest {
     private Long gameId;

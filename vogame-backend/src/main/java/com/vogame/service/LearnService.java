@@ -1,8 +1,11 @@
 package com.vogame.service;
 
-import com.vogame.dto.*;
+import com.vogame.dto.common.AbstractVogameResponse;
+import com.vogame.dto.learn.*;
+import com.vogame.dto.learn.response.*;
 import com.vogame.entity.LearnUser;
 import com.vogame.entity.LearnUserWord;
+import com.vogame.exception.LearnUserNotExistsException;
 import com.vogame.repository.LearnUserRepository;
 import com.vogame.repository.LearnUserWordRepository;
 import com.vogame.util.DateUtil;
@@ -31,7 +34,7 @@ public class LearnService {
 
     private static final Integer pageSize = 10;
 
-    public LearnUserWordDTO save(SaveLearnUserWordsRequest request) {
+    public SaveLearnUserWordResponse save(SaveLearnUserWordsRequest request) {
         LearnUserWord word;
         if(request.getLearnUserWordId() == null) {
             word = new LearnUserWord();
@@ -45,14 +48,16 @@ public class LearnService {
         word.setWord(request.getWord());
         word.setTranslation(request.getTranslation());
         LearnUserWord saveLearnUserWord = learnUserWordRepository.save(word);
-        return modelMapper.map(saveLearnUserWord, LearnUserWordDTO.class);
+        return SaveLearnUserWordResponse.builder()
+                .payload(modelMapper.map(saveLearnUserWord, LearnUserWordDTO.class)).build();
     }
 
-    public void delete(Long id) {
+    public AbstractVogameResponse delete(Long id) {
         learnUserWordRepository.deleteById(id);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 
-    public List<LearnUserWordDTO> startLearning(Long userId) {
+    public StartLearningResponse startLearning(Long userId) {
         LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
 
         Date startOfToday = DateUtil.startOfTodayUTC();
@@ -72,15 +77,16 @@ public class LearnService {
             learnUserWordRepository.saveAll(words);
         }
 
-        return learnUserWordRepository
+        List<LearnUserWordDTO> words = learnUserWordRepository
                 .findByCheckWordDateAndLearnUser_User_IdAndStatus(startOfToday, userId, 1)
                 .stream()
                 .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
                 .collect(Collectors.toList());
+        return StartLearningResponse.builder().payload(words).build();
 
     }
 
-    public void know(Long learnUserWordId) {
+    public AbstractVogameResponse know(Long learnUserWordId) {
         LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
         if(word.getKnowledgeLevel() > 5) {
             word.setStatus(2);
@@ -92,12 +98,14 @@ public class LearnService {
                             DateUtil.startOfDayLocalDateTime().plusDays(daysNumberToAdd)));
         }
         learnUserWordRepository.save(word);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 
-    public void dontKnow(Long learnUserWordId) {
+    public AbstractVogameResponse dontKnow(Long learnUserWordId) {
         LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
         word.setKnowledgeLevel(0);
         learnUserWordRepository.save(word);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 
     private int getDaysNumberToAdd(Integer knowledgeLevel) {
@@ -120,7 +128,7 @@ public class LearnService {
         }
     }
 
-    public LearnStatsDTO getStats(Long userId) {
+    public GetLearnStatsResponse getStats(Long userId) {
         LearnStatsDTO learnStatsDTO = new LearnStatsDTO();
 
         LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
@@ -140,10 +148,10 @@ public class LearnService {
                         DateUtil.startOfTodayUTC(),
                         userId, 1));
 
-        return learnStatsDTO;
+        return GetLearnStatsResponse.builder().payload(learnStatsDTO).build();
     }
 
-    public LearnUserWordsPageResponse getByUserId(Long userId, Integer pageNumber) {
+    public GetLearnUserWordsPageResponse getByUserId(Long userId, Integer pageNumber) {
         Integer count = learnUserWordRepository.countByLearnUser_User_Id(userId);
         if(pageNumber == null) {
             pageNumber = (count-1)/pageSize;
@@ -154,25 +162,32 @@ public class LearnService {
         Page<LearnUserWord> result = learnUserWordRepository
                 .findByLearnUser_User_IdOrderByCreateDateAsc(userId, pageable);
 
-        LearnUserWordsPageResponse response = new LearnUserWordsPageResponse();
+        LearnUserWordsPageDTO response = new LearnUserWordsPageDTO();
         response.setLearnUserWordDTOS(result.getContent().stream()
                 .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
                 .collect(Collectors.toList()));
         response.setPageNumber(result.getNumber());
         response.setTotalPages(result.getTotalPages());
-        return response;
+        return GetLearnUserWordsPageResponse.builder().payload(response).build();
     }
 
-    public LearnConfigDTO getConfig(Long userId) {
+    public GetLearnConfigResponse getConfig(Long userId) throws LearnUserNotExistsException {
         LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
+        if(learnUser == null) {
+            throw new LearnUserNotExistsException("LearnUser not found");
+        }
         LearnConfigDTO learnConfigDTO = new LearnConfigDTO();
         learnConfigDTO.setWordsPerDay(learnUser.getDailyNewWordsCount());
-        return learnConfigDTO;
+        return GetLearnConfigResponse.builder().payload(learnConfigDTO).build();
     }
 
-    public void saveConfig(Long userId, LearnConfigDTO learnConfigDTO) {
+    public AbstractVogameResponse saveConfig(Long userId, LearnConfigDTO learnConfigDTO) throws LearnUserNotExistsException {
         LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
+        if(learnUser == null) {
+            throw new LearnUserNotExistsException("LearnUser not found");
+        }
         learnUser.setDailyNewWordsCount(learnConfigDTO.getWordsPerDay());
         learnUserRepository.save(learnUser);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 }

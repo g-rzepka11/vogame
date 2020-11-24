@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.user;
 
 public class UserDTO {
     private Long id;

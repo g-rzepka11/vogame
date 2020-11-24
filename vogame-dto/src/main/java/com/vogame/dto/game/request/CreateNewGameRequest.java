@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.game.request;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.game;
 
 import com.vogame.dto.word.WordDTO;
 

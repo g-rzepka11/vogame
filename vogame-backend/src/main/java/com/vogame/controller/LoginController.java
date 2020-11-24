@@ -1,5 +1,6 @@
 package com.vogame.controller;
 
+import com.vogame.dto.common.AbstractVogameResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @PostMapping
-    public ResponseEntity login() {
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<AbstractVogameResponse> login() {
+        return ResponseEntity.ok(AbstractVogameResponse.AbstractVogameResponseBuilder().build());
     }
 }

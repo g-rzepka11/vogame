@@ -1,14 +1,15 @@
 package com.vogame.service;
 
-import com.vogame.dto.word.GetWordPackagesResponse;
-import com.vogame.dto.word.WordPackageDTO;
-import com.vogame.dto.word.WordPackageDataDTO;
+import com.vogame.dto.word.*;
+import com.vogame.dto.word.response.GetWordPackageByIdResponse;
+import com.vogame.dto.word.response.GetWordPackagesResponse;
+import com.vogame.dto.word.response.IsWordPackageByNameExistsResponse;
+import com.vogame.dto.word.response.ModifyWordPackageResponse;
 import com.vogame.entity.WordPackage;
 import com.vogame.repository.WordPackageRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,21 +30,26 @@ public class WordPackageService {
                 .map(wordPackage -> modelMapper.map(wordPackage, WordPackageDataDTO.class))
                 .collect(Collectors.toList());
 
-        response.setWordPackageDataDTOS(wordPackageDataDTOS);
+        response.setPayload(wordPackageDataDTOS);
 
         return response;
     }
 
-    public WordPackageDTO getWordPackageById(Long id) {
-        return modelMapper.map(wordPackageRepository.findById(id).get(), WordPackageDTO.class);
+    public GetWordPackageByIdResponse getWordPackageById(Long id) {
+        return GetWordPackageByIdResponse.builder()
+                .payload(modelMapper.map(wordPackageRepository.findById(id).get(), WordPackageDTO.class))
+                .build();
     }
 
-    public WordPackageDTO modifyWordPackage(WordPackageDTO wordPackageDTO) {
+    public ModifyWordPackageResponse modifyWordPackage(WordPackageDTO wordPackageDTO) {
         WordPackage wordPackage = modelMapper.map(wordPackageDTO, WordPackage.class);
-        return modelMapper.map(wordPackageRepository.save(wordPackage), WordPackageDTO.class);
+        return ModifyWordPackageResponse.builder()
+                .payload(modelMapper.map(wordPackageRepository.save(wordPackage), WordPackageDTO.class))
+                .build();
     }
 
-    public Boolean isWordPackageByNameExists(String wordPackageName) {
-        return wordPackageRepository.existsByWordPackageName(wordPackageName);
+    public IsWordPackageByNameExistsResponse isWordPackageByNameExists(String wordPackageName) {
+        return IsWordPackageByNameExistsResponse.builder()
+                .payload(wordPackageRepository.existsByWordPackageName(wordPackageName)).build();
     }
 }

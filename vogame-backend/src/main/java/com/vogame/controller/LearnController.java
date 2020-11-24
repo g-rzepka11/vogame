@@ -1,11 +1,14 @@
 package com.vogame.controller;
 
-import com.vogame.dto.*;
+import com.vogame.dto.common.AbstractVogameResponse;
+import com.vogame.dto.learn.LearnConfigDTO;
+import com.vogame.dto.learn.SaveLearnUserWordsRequest;
+import com.vogame.dto.learn.response.*;
+import com.vogame.exception.LearnUserNotExistsException;
 import com.vogame.service.LearnService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/learn")
@@ -15,47 +18,47 @@ public class LearnController {
     private LearnService learnService;
 
     @PostMapping("/save")
-    public LearnUserWordDTO saveLearnUserWord(@RequestBody SaveLearnUserWordsRequest saveLearnUserWordsRequest) {
-        return learnService.save(saveLearnUserWordsRequest);
+    public ResponseEntity<SaveLearnUserWordResponse> saveLearnUserWord(@RequestBody SaveLearnUserWordsRequest saveLearnUserWordsRequest) {
+        return ResponseEntity.ok(learnService.save(saveLearnUserWordsRequest));
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteLearnUserWord(@PathVariable("id") Long id) {
-        learnService.delete(id);
+    public ResponseEntity<AbstractVogameResponse> deleteLearnUserWord(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(learnService.delete(id));
     }
 
     @PostMapping("/startLearning/{userId}")
-    public List<LearnUserWordDTO> startLearning(@PathVariable Long userId) {
-        return learnService.startLearning(userId);
+    public ResponseEntity<StartLearningResponse> startLearning(@PathVariable Long userId) {
+        return ResponseEntity.ok(learnService.startLearning(userId));
     }
 
     @PostMapping("/know/{learnUserWordId}")
-    public void know(@PathVariable Long learnUserWordId) {
-        learnService.know(learnUserWordId);
+    public ResponseEntity<AbstractVogameResponse> know(@PathVariable Long learnUserWordId) {
+        return ResponseEntity.ok(learnService.know(learnUserWordId));
     }
 
     @PostMapping("/dontKnow/{learnUserWordId}")
-    public void dontKnow(@PathVariable Long learnUserWordId) {
-        learnService.dontKnow(learnUserWordId);
+    public ResponseEntity<AbstractVogameResponse> dontKnow(@PathVariable Long learnUserWordId) {
+        return ResponseEntity.ok(learnService.dontKnow(learnUserWordId));
     }
 
     @GetMapping("/stats/{userId}")
-    public LearnStatsDTO stats(@PathVariable Long userId) {
-        return learnService.getStats(userId);
+    public ResponseEntity<GetLearnStatsResponse> stats(@PathVariable Long userId) {
+        return ResponseEntity.ok(learnService.getStats(userId));
     }
 
     @GetMapping("/user/{userId}")
-    public LearnUserWordsPageResponse getByUserIdPage(@PathVariable("userId") Long userId, @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
-        return learnService.getByUserId(userId, pageNumber);
+    public ResponseEntity<GetLearnUserWordsPageResponse> getByUserIdPage(@PathVariable("userId") Long userId, @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
+        return ResponseEntity.ok(learnService.getByUserId(userId, pageNumber));
     }
 
     @GetMapping("/user/{userId}/config")
-    public LearnConfigDTO getConfig(@PathVariable("userId") Long userId) {
-        return learnService.getConfig(userId);
+    public ResponseEntity<GetLearnConfigResponse> getConfig(@PathVariable("userId") Long userId) throws LearnUserNotExistsException {
+        return ResponseEntity.ok(learnService.getConfig(userId));
     }
 
     @PostMapping("/user/{userId}/config")
-    public void saveConfig(@PathVariable("userId") Long userId, @RequestBody LearnConfigDTO learnConfigDTO) {
-        learnService.saveConfig(userId, learnConfigDTO);
+    public ResponseEntity<AbstractVogameResponse> saveConfig(@PathVariable("userId") Long userId, @RequestBody LearnConfigDTO learnConfigDTO) throws LearnUserNotExistsException {
+        return ResponseEntity.ok(learnService.saveConfig(userId, learnConfigDTO));
     }
 }

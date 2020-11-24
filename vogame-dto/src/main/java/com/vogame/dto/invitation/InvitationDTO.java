@@ -1,4 +1,7 @@
-package com.vogame.dto;
+package com.vogame.dto.invitation;
+
+import com.vogame.dto.user.UserDTO;
+import com.vogame.dto.game.GameRawDTO;
 
 import java.util.Date;
 

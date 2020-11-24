@@ -1,14 +1,16 @@
 package com.vogame.controller;
 
-import com.vogame.dto.UserDTO;
+import com.vogame.dto.user.response.GetUserByEmailResponse;
+import com.vogame.dto.user.response.GetUserByIdResponse;
+import com.vogame.dto.user.response.GetUsersResponse;
+import com.vogame.dto.user.response.IsUserEmailExistsResponse;
 import com.vogame.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -18,22 +20,22 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/")
-    public List<UserDTO> getUsers() {
-        return userService.getUsers();
+    public ResponseEntity<GetUsersResponse> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("/id/{id}")
-    public UserDTO getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<GetUserByIdResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping("/email/{email}")
-    public UserDTO getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email);
+    public ResponseEntity<GetUserByEmailResponse> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
     @GetMapping("/emailExists/{email}")
-    public Boolean isUserEmailExists(@PathVariable String email) {
-        return userService.isUserEmailExists(email);
+    public ResponseEntity<IsUserEmailExistsResponse> isUserEmailExists(@PathVariable String email) {
+        return ResponseEntity.ok(userService.isUserEmailExists(email));
     }
 }

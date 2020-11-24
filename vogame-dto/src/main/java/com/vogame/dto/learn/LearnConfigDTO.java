@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.learn;
 
 public class LearnConfigDTO {
     private Integer wordsPerDay;

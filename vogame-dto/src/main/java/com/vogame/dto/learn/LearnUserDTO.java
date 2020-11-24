@@ -1,4 +1,6 @@
-package com.vogame.dto;
+package com.vogame.dto.learn;
+
+import com.vogame.dto.user.UserDTO;
 
 public class LearnUserDTO {
 

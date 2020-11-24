@@ -1,8 +1,8 @@
-package com.vogame.dto;
+package com.vogame.dto.learn;
 
 import java.util.List;
 
-public class LearnUserWordsPageResponse {
+public class LearnUserWordsPageDTO {
     private List<LearnUserWordDTO> learnUserWordDTOS;
     private Integer pageNumber;
     private Integer totalPages;

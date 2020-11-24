@@ -1,4 +1,4 @@
-package com.vogame.dto;
+package com.vogame.dto.game;
 
 import java.util.Date;
 

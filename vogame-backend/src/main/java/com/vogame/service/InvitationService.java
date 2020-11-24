@@ -1,6 +1,10 @@
 package com.vogame.service;
 
-import com.vogame.dto.InvitationDTO;
+import com.vogame.dto.invitation.InvitationDTO;
+import com.vogame.dto.common.AbstractVogameResponse;
+import com.vogame.dto.invitation.response.GetInvitationsByGameIdResponse;
+import com.vogame.dto.invitation.response.GetInvitationsByHostUserIdResponse;
+import com.vogame.dto.invitation.response.GetInvitationsByInviteeResponse;
 import com.vogame.entity.Game;
 import com.vogame.entity.GameUser;
 import com.vogame.entity.Invitation;
@@ -29,21 +33,24 @@ public class InvitationService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<InvitationDTO> getByHostUserId(Long userId) {
-        return invitationRepository.findByHostUser(userId).stream()
+    public GetInvitationsByHostUserIdResponse getByHostUserId(Long userId) {
+        List<InvitationDTO> invitations = invitationRepository.findByHostUser(userId).stream()
                 .map(invitation -> modelMapper.map(invitation, InvitationDTO.class))
                 .collect(Collectors.toList());
+        return GetInvitationsByHostUserIdResponse.builder().payload(invitations).build();
     }
 
-    public List<InvitationDTO> getByInvitee(Long userId) {
-        return invitationRepository.findByInvitee_Id(userId).stream()
+    public GetInvitationsByInviteeResponse getByInvitee(Long userId) {
+        List<InvitationDTO> invitations = invitationRepository.findByInvitee_Id(userId).stream()
                 .map(invitation -> modelMapper.map(invitation, InvitationDTO.class))
                 .collect(Collectors.toList());
+        return GetInvitationsByInviteeResponse.builder().payload(invitations).build();
     }
 
-    public void joinToGame(Long userId, Long gameId) {
+    public AbstractVogameResponse joinToGame(Long userId, Long gameId) {
         gameRepository.findById(gameId)
                 .ifPresent(game -> addUserIdToGame(game, userId));
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 
     private void addUserIdToGame(Game game, Long userId) {
@@ -69,9 +76,10 @@ public class InvitationService {
         invitationRepository.deleteAll(invitations);
     }
 
-    public List<InvitationDTO> getByGameId(Long gameId) {
-        return invitationRepository.findByGame_Id(gameId).stream()
+    public GetInvitationsByGameIdResponse getByGameId(Long gameId) {
+        List<InvitationDTO> invitations = invitationRepository.findByGame_Id(gameId).stream()
                 .map(invitation -> modelMapper.map(invitation, InvitationDTO.class))
                 .collect(Collectors.toList());
+        return GetInvitationsByGameIdResponse.builder().payload(invitations).build();
     }
 }
