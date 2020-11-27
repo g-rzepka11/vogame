@@ -88,7 +88,7 @@ public class LearnService {
 
     public AbstractVogameResponse know(Long learnUserWordId) {
         LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
-        if(word.getKnowledgeLevel() > 5) {
+        if(word.getKnowledgeLevel() == 5) {
             word.setStatus(2);
         } else {
             word.setKnowledgeLevel(word.getKnowledgeLevel() + 1);
