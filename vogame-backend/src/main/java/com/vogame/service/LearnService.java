@@ -78,7 +78,7 @@ public class LearnService {
         }
 
         List<LearnUserWordDTO> words = learnUserWordRepository
-                .findByCheckWordDateAndLearnUser_User_IdAndStatus(startOfToday, userId, 1)
+                .findByCheckWordDateLessThanEqualAndLearnUser_User_IdAndStatus(startOfToday, userId, 1)
                 .stream()
                 .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
                 .collect(Collectors.toList());
@@ -141,10 +141,10 @@ public class LearnService {
                 .countByLearnUser_User_IdAndStatus(userId, 2));
 
         learnStatsDTO.setPendingWords(learnUserWordRepository
-                .countByCheckWordDateAndLearnUser_User_IdAndStatus(null, userId, 0));
+                .countByCheckWordDateIsNullAndLearnUser_User_IdAndStatus(userId, 0));
 
         learnStatsDTO.setRemainingWordsForDay(learnUserWordRepository
-                .countByCheckWordDateAndLearnUser_User_IdAndStatus(
+                .countByCheckWordDateLessThanEqualAndLearnUser_User_IdAndStatus(
                         DateUtil.startOfTodayUTC(),
                         userId, 1));
 
