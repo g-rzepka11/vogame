@@ -32,14 +32,29 @@ public class LearnController {
         return ResponseEntity.ok(learnService.startLearning(userId));
     }
 
+    @PostMapping("/startLearning/reverse/{userId}")
+    public ResponseEntity<StartLearningResponse> reverseStartLearning(@PathVariable Long userId) {
+        return ResponseEntity.ok(learnService.reverseStartLearning(userId));
+    }
+
     @PostMapping("/know/{learnUserWordId}")
     public ResponseEntity<AbstractVogameResponse> know(@PathVariable Long learnUserWordId) {
         return ResponseEntity.ok(learnService.know(learnUserWordId));
     }
 
+    @PostMapping("/know/reverse/{learnUserWordId}")
+    public ResponseEntity<AbstractVogameResponse> reverseKnow(@PathVariable Long learnUserWordId) {
+        return ResponseEntity.ok(learnService.reverseKnow(learnUserWordId));
+    }
+
     @PostMapping("/dontKnow/{learnUserWordId}")
     public ResponseEntity<AbstractVogameResponse> dontKnow(@PathVariable Long learnUserWordId) {
         return ResponseEntity.ok(learnService.dontKnow(learnUserWordId));
+    }
+
+    @PostMapping("/dontKnow/reverse/{learnUserWordId}")
+    public ResponseEntity<AbstractVogameResponse> reverseDontKnow(@PathVariable Long learnUserWordId) {
+        return ResponseEntity.ok(learnService.reverseDontKnow(learnUserWordId));
     }
 
     @GetMapping("/stats/{userId}")

@@ -16,7 +16,11 @@ public interface LearnUserWordRepository extends JpaRepository<LearnUserWord, Lo
 
     List<LearnUserWord> findByLearnUser_User_IdAndStatusOrderByCreateDateAsc(Long userId, Integer status, Pageable ten);
 
+    List<LearnUserWord> findByLearnUser_User_IdAndReverseStatusOrderByCreateDateAsc(Long userId, Integer reverseStatus, Pageable ten);
+
     List<LearnUserWord> findByCheckWordDateLessThanEqualAndLearnUser_User_IdAndStatus(Date date, Long userId, Integer status);
+
+    List<LearnUserWord> findByReverseCheckWordDateLessThanEqualAndLearnUser_User_IdAndReverseStatus(Date date, Long userId, Integer reverseStatus);
 
     Integer countByCheckWordDateIsNullAndLearnUser_User_IdAndStatus(Long userId, Integer status);
 

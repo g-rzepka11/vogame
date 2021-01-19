@@ -40,6 +40,7 @@ public class LearnService {
             word = new LearnUserWord();
             word.setCreateDate(new Date());
             word.setStatus(0);
+            word.setReverseStatus(0);
             word.setLearnUser(learnUserRepository.findFirstByUser_Id(request.getUserId()));
         } else {
             word = learnUserWordRepository.getOne(request.getLearnUserWordId());
@@ -86,6 +87,35 @@ public class LearnService {
 
     }
 
+    public StartLearningResponse reverseStartLearning(Long userId) {
+        LearnUser learnUser = learnUserRepository.findFirstByUser_Id(userId);
+
+        Date startOfToday = DateUtil.startOfTodayUTC();
+
+        if(learnUser.getReverseLastLearningDate() == null
+                || startOfToday.after(learnUser.getReverseLastLearningDate())) {
+            learnUser.setReverseLastLearningDate(startOfToday);
+            LearnUser savedLearnUser = learnUserRepository.save(learnUser);
+            Pageable limit = PageRequest.of(0, savedLearnUser.getReverseDailyNewWordsCount().intValue());
+            List<LearnUserWord> words = learnUserWordRepository
+                    .findByLearnUser_User_IdAndReverseStatusOrderByCreateDateAsc(userId, 0, limit);
+            words.stream().forEach(word -> {
+                word.setReverseKnowledgeLevel(0);
+                word.setReverseCheckWordDate(startOfToday);
+                word.setReverseStatus(1);
+            });
+            learnUserWordRepository.saveAll(words);
+        }
+
+        List<LearnUserWordDTO> words = learnUserWordRepository
+                .findByReverseCheckWordDateLessThanEqualAndLearnUser_User_IdAndReverseStatus(startOfToday, userId, 1)
+                .stream()
+                .map(invitation -> modelMapper.map(invitation, LearnUserWordDTO.class))
+                .collect(Collectors.toList());
+        return StartLearningResponse.builder().payload(words).build();
+
+    }
+
     public AbstractVogameResponse know(Long learnUserWordId) {
         LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
         if(word.getKnowledgeLevel() == 5) {
@@ -101,9 +131,31 @@ public class LearnService {
         return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }
 
+    public AbstractVogameResponse reverseKnow(Long learnUserWordId) {
+        LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
+        if(word.getReverseKnowledgeLevel() == 5) {
+            word.setReverseStatus(2);
+        } else {
+            word.setReverseKnowledgeLevel(word.getReverseKnowledgeLevel() + 1);
+            int daysNumberToAdd = getDaysNumberToAdd(word.getReverseKnowledgeLevel());
+            word.setReverseCheckWordDate(
+                    DateUtil.localDateTimeToDateUTC(
+                            DateUtil.startOfDayLocalDateTime().plusDays(daysNumberToAdd)));
+        }
+        learnUserWordRepository.save(word);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
+    }
+
     public AbstractVogameResponse dontKnow(Long learnUserWordId) {
         LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
         word.setKnowledgeLevel(0);
+        learnUserWordRepository.save(word);
+        return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
+    }
+
+    public AbstractVogameResponse reverseDontKnow(Long learnUserWordId) {
+        LearnUserWord word = learnUserWordRepository.getOne(learnUserWordId);
+        word.setReverseKnowledgeLevel(0);
         learnUserWordRepository.save(word);
         return AbstractVogameResponse.AbstractVogameResponseBuilder().build();
     }

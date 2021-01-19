@@ -18,6 +18,10 @@ public class LearnUser {
 
     private Date lastLearningDate;
 
+    private Integer reverseDailyNewWordsCount;
+
+    private Date reverseLastLearningDate;
+
 
     public Long getId() {
         return this.id;
@@ -49,5 +53,21 @@ public class LearnUser {
 
     public void setLastLearningDate(Date lastLearningDate) {
         this.lastLearningDate = lastLearningDate;
+    }
+
+    public Integer getReverseDailyNewWordsCount() {
+        return reverseDailyNewWordsCount;
+    }
+
+    public void setReverseDailyNewWordsCount(Integer reverseDailyNewWordsCount) {
+        this.reverseDailyNewWordsCount = reverseDailyNewWordsCount;
+    }
+
+    public Date getReverseLastLearningDate() {
+        return reverseLastLearningDate;
+    }
+
+    public void setReverseLastLearningDate(Date reverseLastLearningDate) {
+        this.reverseLastLearningDate = reverseLastLearningDate;
     }
 }

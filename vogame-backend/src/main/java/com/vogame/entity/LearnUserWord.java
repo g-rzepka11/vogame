@@ -26,6 +26,12 @@ public class LearnUserWord {
 
     private String translation;
 
+    private Integer reverseStatus;
+
+    private Date reverseCheckWordDate;
+
+    private Integer reverseKnowledgeLevel;
+
     public Long getId() {
         return this.id;
     }
@@ -88,5 +94,29 @@ public class LearnUserWord {
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    public Integer getReverseStatus() {
+        return reverseStatus;
+    }
+
+    public void setReverseStatus(Integer reverseStatus) {
+        this.reverseStatus = reverseStatus;
+    }
+
+    public Date getReverseCheckWordDate() {
+        return reverseCheckWordDate;
+    }
+
+    public void setReverseCheckWordDate(Date reverseCheckWordDate) {
+        this.reverseCheckWordDate = reverseCheckWordDate;
+    }
+
+    public Integer getReverseKnowledgeLevel() {
+        return reverseKnowledgeLevel;
+    }
+
+    public void setReverseKnowledgeLevel(Integer reverseKnowledgeLevel) {
+        this.reverseKnowledgeLevel = reverseKnowledgeLevel;
     }
 }
