@@ -34,6 +34,8 @@ public class LearnService {
 
     private static final Integer pageSize = 10;
 
+    private static final Integer dailyLimit = 50;
+
     public SaveLearnUserWordResponse save(SaveLearnUserWordsRequest request) {
         LearnUserWord word;
         if(request.getLearnUserWordId() == null) {
@@ -96,15 +98,7 @@ public class LearnService {
                 || startOfToday.after(learnUser.getReverseLastLearningDate())) {
             learnUser.setReverseLastLearningDate(startOfToday);
             LearnUser savedLearnUser = learnUserRepository.save(learnUser);
-            Pageable limit = PageRequest.of(0, savedLearnUser.getReverseDailyNewWordsCount().intValue());
-            List<LearnUserWord> words = learnUserWordRepository
-                    .findByLearnUser_User_IdAndReverseStatusOrderByCreateDateAsc(userId, 0, limit);
-            words.stream().forEach(word -> {
-                word.setReverseKnowledgeLevel(0);
-                word.setReverseCheckWordDate(startOfToday);
-                word.setReverseStatus(1);
-            });
-            learnUserWordRepository.saveAll(words);
+            addNewWordsReverse(userId, startOfToday, savedLearnUser);
         }
 
         List<LearnUserWordDTO> words = learnUserWordRepository
@@ -114,6 +108,25 @@ public class LearnService {
                 .collect(Collectors.toList());
         return StartLearningResponse.builder().payload(words).build();
 
+    }
+
+    private void addNewWordsReverse(Long userId, Date startOfToday, LearnUser savedLearnUser) {
+        Integer wordsForTodayWithoutNewWords = learnUserWordRepository
+                .countByReverseCheckWordDateLessThanEqualAndLearnUser_User_IdAndReverseStatus(startOfToday, userId, 1);
+
+        int wordsLessThanLimitCount = dailyLimit - wordsForTodayWithoutNewWords;
+        if(wordsLessThanLimitCount > 0) {
+            Integer newWordsCount = Integer.min(wordsLessThanLimitCount, savedLearnUser.getReverseDailyNewWordsCount().intValue());
+            Pageable limit = PageRequest.of(0, newWordsCount);
+            List<LearnUserWord> words = learnUserWordRepository
+                    .findByLearnUser_User_IdAndReverseStatusOrderByCreateDateAsc(userId, 0, limit);
+            words.stream().forEach(word -> {
+                word.setReverseKnowledgeLevel(0);
+                word.setReverseCheckWordDate(startOfToday);
+                word.setReverseStatus(1);
+            });
+            learnUserWordRepository.saveAll(words);
+        }
     }
 
     public AbstractVogameResponse know(Long learnUserWordId) {
