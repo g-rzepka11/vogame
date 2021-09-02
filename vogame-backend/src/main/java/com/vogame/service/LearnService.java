@@ -213,6 +213,17 @@ public class LearnService {
                         DateUtil.startOfTodayUTC(),
                         userId, 1));
 
+        learnStatsDTO.setReverseLearnedWords(learnUserWordRepository
+                .countByLearnUser_User_IdAndReverseStatus(userId, 2));
+
+        learnStatsDTO.setReversePendingWords(learnUserWordRepository
+                .countByReverseCheckWordDateIsNullAndLearnUser_User_IdAndReverseStatus(userId, 0));
+
+        learnStatsDTO.setReverseRemainingWordsForDay(learnUserWordRepository
+                .countByReverseCheckWordDateLessThanEqualAndLearnUser_User_IdAndReverseStatus(
+                        DateUtil.startOfTodayUTC(),
+                        userId, 1));
+
         return GetLearnStatsResponse.builder().payload(learnStatsDTO).build();
     }
 

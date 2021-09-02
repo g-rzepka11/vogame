@@ -14,6 +14,12 @@ public class LearnStatsDTO {
 
     private Integer remainingWordsForDay;
 
+    private Integer reverseLearnedWords;
+
+    private Integer reversePendingWords;
+
+    private Integer reverseRemainingWordsForDay;
+
     public Date getStatsForDate() {
         return statsForDate;
     }
@@ -52,5 +58,29 @@ public class LearnStatsDTO {
 
     public void setRemainingWordsForDay(Integer remainingWordsForDay) {
         this.remainingWordsForDay = remainingWordsForDay;
+    }
+
+    public Integer getReverseLearnedWords() {
+        return reverseLearnedWords;
+    }
+
+    public void setReverseLearnedWords(Integer reverseLearnedWords) {
+        this.reverseLearnedWords = reverseLearnedWords;
+    }
+
+    public Integer getReversePendingWords() {
+        return reversePendingWords;
+    }
+
+    public void setReversePendingWords(Integer reversePendingWords) {
+        this.reversePendingWords = reversePendingWords;
+    }
+
+    public Integer getReverseRemainingWordsForDay() {
+        return reverseRemainingWordsForDay;
+    }
+
+    public void setReverseRemainingWordsForDay(Integer reverseRemainingWordsForDay) {
+        this.reverseRemainingWordsForDay = reverseRemainingWordsForDay;
     }
 }

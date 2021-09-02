@@ -24,11 +24,15 @@ public interface LearnUserWordRepository extends JpaRepository<LearnUserWord, Lo
 
     Integer countByCheckWordDateIsNullAndLearnUser_User_IdAndStatus(Long userId, Integer status);
 
+    Integer countByReverseCheckWordDateIsNullAndLearnUser_User_IdAndReverseStatus(Long userId, Integer status);
+
     Integer countByCheckWordDateLessThanEqualAndLearnUser_User_IdAndStatus(Date date, Long userId, Integer status);
 
     Integer countByReverseCheckWordDateLessThanEqualAndLearnUser_User_IdAndReverseStatus(Date date, Long userId, Integer reverseStatus);
 
     Integer countByLearnUser_User_IdAndStatus(Long userId, Integer status);
+
+    Integer countByLearnUser_User_IdAndReverseStatus(Long userId, Integer status);
 
     Integer countByLearnUser_User_Id(Long userId);
 }
