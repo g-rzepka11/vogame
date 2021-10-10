@@ -69,15 +69,7 @@ public class LearnService {
                 || startOfToday.after(learnUser.getLastLearningDate())) {
             learnUser.setLastLearningDate(startOfToday);
             LearnUser savedLearnUser = learnUserRepository.save(learnUser);
-            Pageable limit = PageRequest.of(0, savedLearnUser.getDailyNewWordsCount().intValue());
-            List<LearnUserWord> words = learnUserWordRepository
-                    .findByLearnUser_User_IdAndStatusOrderByCreateDateAsc(userId, 0, limit);
-            words.stream().forEach(word -> {
-                word.setKnowledgeLevel(0);
-                word.setCheckWordDate(startOfToday);
-                word.setStatus(1);
-            });
-            learnUserWordRepository.saveAll(words);
+            addNewWords(userId, startOfToday, savedLearnUser);
         }
 
         List<LearnUserWordDTO> words = learnUserWordRepository
@@ -87,6 +79,25 @@ public class LearnService {
                 .collect(Collectors.toList());
         return StartLearningResponse.builder().payload(words).build();
 
+    }
+
+    private void addNewWords(Long userId, Date startOfToday, LearnUser savedLearnUser) {
+        Integer wordsForTodayWithoutNewWords = learnUserWordRepository
+                .countByCheckWordDateLessThanEqualAndLearnUser_User_IdAndStatus(startOfToday, userId, 1);
+
+        int wordsLessThanLimitCount = dailyLimit - wordsForTodayWithoutNewWords;
+        if(wordsLessThanLimitCount > 0) {
+            Integer newWordsCount = Integer.min(wordsLessThanLimitCount, savedLearnUser.getDailyNewWordsCount().intValue());
+            Pageable limit = PageRequest.of(0, newWordsCount);
+            List<LearnUserWord> words = learnUserWordRepository
+                    .findByLearnUser_User_IdAndStatusOrderByCreateDateAsc(userId, 0, limit);
+            words.stream().forEach(word -> {
+                word.setKnowledgeLevel(0);
+                word.setCheckWordDate(startOfToday);
+                word.setStatus(1);
+            });
+            learnUserWordRepository.saveAll(words);
+        }
     }
 
     public StartLearningResponse reverseStartLearning(Long userId) {
